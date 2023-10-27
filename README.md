@@ -1,103 +1,86 @@
 ![](https://i.imgur.com/xG74tOh.png)
 
-# Desafio Módulo 3 - Backend
+# Desafio | Back-end - Módulo 2
+
+Você acabou de ser contratado pela melhor empresa de tecnologia do mundo: a **CUBOS**.
+Sua primeira tarefa como desenvolvedor é criar uma API para o banco digital Cubos Bank.  
+Esse será um projeto **piloto**, ou seja, no futuro outras funcionalidades serão implementadas, portanto, dados do banco (nome, agência, etc.) serão imutáveis.
 
 Seu papel é construir uma RESTful API que permita:
+-   Listagem de contas bancárias
+-   Criar conta bancária
+-   Atualizar os dados do usuário da conta bancária
+-   Excluir uma conta bancária
+-   Depositar em uma conta bancária
+-   Sacar de uma conta bancária
+-   Transferir valores entre contas bancárias
+-   Consultar saldo da conta bancária
+-   Emitir extrato bancário
 
--   Cadastrar Usuário
--   Fazer Login
--   Detalhar Perfil do Usuário Logado
--   Editar Perfil do Usuário Logado
--   Listar categorias
--   Listar transações
--   Detalhar transação
--   Cadastrar transação
--   Editar transação
--   Remover transação
--   Obter extrato de transações
--   [Extra] Filtrar transações por categoria
-
-**Importante: Lembre-se sempre que cada usuário só pode ver e manipular seus próprios dados e suas próprias transações. Não atender a este pré-requisito é uma falha de segurança gravíssima!**
-
-**Importante 2: O diretório ".github" e seu conteúdo não podem ser alterados e muito menos excluídos**
-
-**Importante 3: Sempre que a validação de uma requisição falhar, responda com código de erro e mensagem adequada à situação, ok?**
-
-**Importante 4: O link de acesso a esta API se encontra no final deste README. Este link é somente para testes!**
+**IMPORTANTE: Sempre que a validação de uma requisição falhar, responda com código de erro e mensagem adequada à situação, ok?**
 
 **Exemplo:**
 
 ```javascript
-// Quando é informado um id de transação que não existe:
+// Quando é informado um número de conta que não existe:
 // HTTP Status 404
 {
-    "mensagem": "Transação não encontrada!"
+    "mensagem": "Conta não encontrada"
 }
 ```
 
-## **Banco de dados**
+---
 
-Você precisa criar um Banco de Dados PostgreSQL chamado `dindin` contendo as seguintes tabelas e colunas:  
-**ATENÇÃO! Os nomes das tabelas e das colunas a serem criados devem seguir exatamente os nomes listados abaixo.**
+## **Persistências dos dados**
 
--   usuarios
-    -   id
-    -   nome
-    -   email (campo único)
-    -   senha
--   categorias
-    -   id
-    -   descricao
--   transacoes
-    -   id
-    -   descricao
-    -   valor
-    -   data
-    -   categoria_id
-    -   usuario_id
-    -   tipo
+Os dados serão persistidos em memória, no objeto existente dentro do arquivo `bancodedados.js`. Todas as transações e contas bancárias deverão ser inseridas dentro deste objeto, seguindo a estrutura que já existe.
 
-**IMPORTANTE: Deverá ser criado no projeto o(s) arquivo(s) SQL que deverá ser o script que cria as tabelas corretamente.**
+### **Estrutura do objeto no arquivo `bancodedados.js`**
 
-As categorias a seguir precisam ser previamente cadastradas para que sejam listadas no endpoint de listagem das categorias.
+```javascript
+{
+    banco: {
+        nome: "Cubos Bank",
+        numero: "123",
+        agencia: "0001",
+        senha: "Cubos123Bank",
+    },
+    contas: [
+        // array de contas bancárias
+    ],
+    saques: [
+        // array de saques
+    ],
+    depositos: [
+        // array de depósitos
+    ],
+    transferencias: [
+        // array de transferências
+    ],
+}
+```
 
-## **Categorias**
+**IMPORTANTE: Este arquivo não pode ser alterado ou removido do projeto.**  
+**Portanto, a nomenclatura das propriedades `banco`, `contas`, `saques`, `depositos`, `transferencias`, assim como os valores atribuídos as propriedades `nome`, `numero`, `agencia` e `senha` não devem ser alterados.**
 
--   Alimentação
--   Assinaturas e Serviços
--   Casa
--   Mercado
--   Cuidados Pessoais
--   Educação
--   Família
--   Lazer
--   Pets
--   Presentes
--   Roupas
--   Saúde
--   Transporte
--   Salário
--   Vendas
--   Outras receitas
--   Outras despesas
-
-**IMPORTANTE: Deverá ser criado no projeto o arquivo SQL que deverá ser o script de inserção das categorias acima na tabela.**
+---
 
 ## **Requisitos obrigatórios**
 
--   A API a ser criada deverá acessar o banco de dados a ser criado "dindin" para persistir e manipular os dados de usuários, categorias e transações utilizados pela aplicação.
--   O campo `id` das tabelas no banco de dados deve ser auto incremento, chave primária e não deve permitir edição uma vez criado.
--   Seu código deverá estar organizado, delimitando as responsabilidades de cada arquivo adequadamente. Ou seja, é esperado que ele tenha, no mínimo:
+-   Sua API deve seguir o padrão REST
+-   Seu código deve estar organizado, delimitando as responsabilidades de cada arquivo adequadamente. Ou seja, é esperado que ele tenha, no mínimo:
     -   Um arquivo index.js
-    -   Um arquivo conexao.js
+    -   Um arquivo servidor.js
     -   Um arquivo de rotas
-    -   Um pasta com controladores
--   Qualquer valor monetário deverá ser representado em centavos (Ex.: R$ 10,00 reais = 1000)
+    -   Uma pasta com controladores
+-   Qualquer valor (dinheiro) deverá ser representado em centavos (Ex.: R$ 10,00 reais = 1000)
 -   Evite códigos duplicados. Antes de copiar e colar, pense se não faz sentido esse pedaço de código estar centralizado numa função.
 
-## **Status Codes**
+---
 
-Abaixo, listamos os possíveis **_status codes_** esperados como resposta da API.
+## Status Code
+
+Abaixo, listamos os possíveis `status code` esperados como resposta da API.
 
 ```javascript
 // 200 (OK) = requisição bem sucedida
@@ -107,662 +90,612 @@ Abaixo, listamos os possíveis **_status codes_** esperados como resposta da API
 // 401 (Unauthorized) = o usuário não está autenticado (logado)
 // 403 (Forbidden) = o usuário não tem permissão de acessar o recurso solicitado
 // 404 (Not Found) = o servidor não pode encontrar o recurso solicitado
+// 500 (Internal Server Error) = erro inesperado do servidor
 ```
+
+---
 
 ## **Endpoints**
 
-### **Cadastrar usuário**
+### **Listar contas bancárias**
 
-#### `POST` `/usuario`
+#### `GET` `/contas?senha_banco=123`
 
-Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
+Essa é a rota que será utilizada para listar todas as contas bancárias existentes.
 
 -   **Requisição**  
+
+    Parâmetro do tipo query **`senha_banco`**.  
+    Não deverá possuir conteúdo no corpo (body) da requisição.
+
+-   **Resposta**  
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um array dos objetos (contas) encontradas.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
+
+-   **REQUISITOS OBRIGATÓRIOS**
+    -   Verificar se o parâmetro de query **`senha_banco`** foi informado na requisição
+    -   Validar se a senha informada confere com a senha do banco, que temos armazenada no arquivo `bancodedados.js`
+
+#### **Exemplo de requisição**
+
+```javascript
+// GET /contas?senha_banco=senha-do-banco
+// Sem conteúdo no corpo (body) da requisição
+```
+
+#### **Exemplos de resposta**
+
+```javascript
+// HTTP Status 200 / 201
+// 2 contas encontradas
+[
+    {
+        numero: "1",
+        saldo: 0,
+        usuario: {
+            nome: 'Foo Bar',
+            cpf: '00011122233',
+            data_nascimento: '2021-03-15',
+            telefone: '71999998888',
+            email: 'foo@bar.com',
+            senha: '1234'
+        }
+    },
+    {
+        numero: "2",
+        saldo: 1000,
+        usuario: {
+            nome: 'Foo Bar 2',
+            cpf: '00011122234',
+            data_nascimento: '2021-03-15',
+            telefone: '71999998888',
+            email: 'foo@bar2.com',
+            senha: '12345'
+        }
+    }
+]
+
+// HTTP Status 200 / 201
+// nenhuma conta encontrada
+[]
+```
+
+### **Criar conta bancária**
+
+#### `POST` `/contas`
+
+Essa é a rota que será utilizada para criar uma conta bancária, onde será gerado um número único para identificação de cada conta.
+
+-   **Requisição**
+
     Sem parâmetros de rota ou de query.  
     O corpo (body) deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
 
     -   nome
+    -   cpf
+    -   data_nascimento
+    -   telefone
     -   email
     -   senha
 
 -   **Resposta**  
-    Em caso de **sucesso**, deveremos enviar no corpo (body) da resposta o conteúdo do usuário cadastrado, incluindo seu respectivo `id` e excluindo a senha criptografada.
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
 
--   **REQUISITOS OBRIGATÓRIOS**
-    -   Validar os campos obrigatórios:
-        -   nome
-        -   email
-        -   senha
-    -   Validar se o e-mail informado já existe
-    -   Criptografar a senha antes de persistir no banco de dados
-    -   Cadastrar o usuário no banco de dados
-
-#### **Exemplo de requisição**
-
-```javascript
-// POST /usuario
-{
-    "nome": "José",
-    "email": "jose@email.com",
-    "senha": "123456"
-}
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-{
-    "id": 1,
-    "nome": "José",
-    "email": "jose@email.com"
-}
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
-{
-    "mensagem": "Já existe usuário cadastrado com o e-mail informado."
-}
-```
-
-### **Login do usuário**
-
-#### `POST` `/login`
-
-Essa é a rota que permite o usuario cadastrado realizar o login no sistema.
-
--   **Requisição**  
-    Sem parâmetros de rota ou de query.  
-    O corpo (body) deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
-
-    -   email
-    -   senha
-
--   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **token** que deverá possuir como valor o token de autenticação gerado e uma propriedade **usuario** que deverá possuir as informações do usuário autenticado, exceto a senha do usuário.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`numero`** que deverá possuir o número gerado exclusivamente para a conta em questão criada, a propriedade **`saldo`** que deverá possuir valor inicial zerado e a propriedade **`usuario`** que deverá possuir as informações do usuário da conta.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
 
 -   **REQUISITOS OBRIGATÓRIOS**
 
-    -   Validar os campos obrigatórios:
-        -   email
-        -   senha
-    -   Verificar se o e-mail existe
-    -   Validar e-mail e senha
-    -   Criar token de autenticação com id do usuário
-
-#### **Exemplo de requisição**
-
-```javascript
-// POST /login
-{
-    "email": "jose@email.com",
-    "senha": "123456"
-}
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-{
-    "usuario": {
-        "id": 1,
-        "nome": "José",
-        "email": "jose@email.com"
-    },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjIzMjQ5NjIxLCJleHAiOjE2MjMyNzg0MjF9.KLR9t7m_JQJfpuRv9_8H2-XJ92TSjKhGPxJXVfX6wBI"
-}
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
-{
-    "mensagem": "Usuário e/ou senha inválido(s)."
-}
-```
-
----
-
-## **ATENÇÃO**: Todas as funcionalidades (endpoints) a seguir, a partir desse ponto, deverão exigir o token de autenticação do usuário logado, recebendo no header com o formato Bearer Token. Portanto, em cada funcionalidade será necessário validar o token informado.
-
----
-
-### **Validações do token**
-
--   **REQUISITOS OBRIGATÓRIOS**
-    -   Validar se o token foi enviado no header da requisição (Bearer Token)
-    -   Verificar se o token é válido
-    -   Consultar usuário no banco de dados pelo id contido no token informado
-
-### **Detalhar usuário**
-
-#### `GET` `/usuario`
-
-Essa é a rota que será chamada quando o usuario quiser obter os dados do seu próprio perfil.  
-**Atenção!:** O usuário deverá ser identificado através do ID presente no token de autenticação.
-
--   **Requisição**  
-    Sem parâmetros de rota ou de query.  
-    Não deverá possuir conteúdo no corpo da requisição.
-
--   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto que representa o usuário encontrado, com todas as suas propriedades (exceto a senha), conforme exemplo abaixo, acompanhado de **_status code_** apropriado.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.  
-    **Dica:** neste endpoint podemos fazer uso do status code 401 (Unauthorized).
-
-#### **Exemplo de requisição**
-
-```javascript
-// GET /usuario
-// Sem conteúdo no corpo (body) da requisição
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-{
-    "id": 1,
-    "nome": "José",
-    "email": "jose@email.com"
-}
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
-{
-    "mensagem": "Para acessar este recurso um token de autenticação válido deve ser enviado."
-}
-```
-
-### **Atualizar usuário**
-
-#### `PUT` `/usuario`
-
-Essa é a rota que será chamada quando o usuário quiser realizar alterações no seu próprio usuário.  
-**Atenção!:** O usuário deverá ser identificado através do ID presente no token de autenticação.
-
--   **Requisição**  
-    Sem parâmetros de rota ou de query.  
-    O corpo (body) deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
-
-    -   nome
-    -   email
-    -   senha
-
--   **Resposta**  
-    Em caso de **sucesso**, não deveremos enviar conteúdo no corpo (body) da resposta.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
-
--   **REQUISITOS OBRIGATÓRIOS**
     -   Validar os campos obrigatórios:
         -   nome
+        -   cpf
+        -   data_nascimento
+        -   telefone
         -   email
         -   senha
-    -   Validar se o novo e-mail já existe no banco de dados para outro usuário
-        -   Caso já exista o novo e-mail fornecido para outro usuário no banco de dados, a alteração não deve ser permitida (o campo de email deve ser sempre único no banco de dados)
-    -   Criptografar a senha antes de salvar no banco de dados
-    -   Atualizar as informações do usuário no banco de dados
+    -   CPF deve ser um campo único.
+    -   E-mail deve ser um campo único.
+    -   Definir o saldo inicial da conta como 0
+    -   Criar uma nova conta cujo número seja único
 
 #### **Exemplo de requisição**
 
 ```javascript
-// PUT /usuario
+// POST /contas
 {
-    "nome": "José de Abreu",
-    "email": "jose_abreu@email.com",
-    "senha": "j4321"
+    "nome": "Foo Bar",
+    "email": "foo@bar.com",
+    "cpf": "00011122233",
+    "data_nascimento": "15/03/2001",
+    "telefone": "11999998888",
+    "senha": "1234"
 }
 ```
 
 #### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
-// Sem conteúdo no corpo (body) da resposta
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
+// HTTP Status 200 / 201
+// sucesso ao cadastrar
 {
-    "mensagem": "O e-mail informado já está sendo utilizado por outro usuário."
+    numero:  "1",
+    saldo: 0,
+    usuario: {
+        nome: "Foo Bar",
+        cpf: "00011122233",
+        data_nascimento: "2001-03-15",
+        telefone: "11999998888",
+        email: "foo@bar.com",
+        senha: "1234"
+    }
+}
+
+// HTTP Status 400, 404
+// erro ao cadastrar
+{
+    mensagem: 'Mensagem de erro'
 }
 ```
 
-### **Listar categorias**
+### **Atualizar usuário da conta bancária**
 
-#### `GET` `/categoria`
+#### `PUT` `/contas/:numeroConta/usuario`
 
-Essa é a rota que será chamada quando o usuario logado quiser listar todas as categorias cadastradas.
+Essa é a rota que será utilizada para atualizar os dados do usuário de uma conta bancária.
 
--   **Requisição**  
-    Sem parâmetros de rota ou de query.  
+-   **Requisição**
+
+    Parâmetro do tipo rota **`numeroConta`**.  
+    O corpo (body) deverá possuir um objeto contendo uma ou até mesmo todas as seguintes propriedades (respeitando estes nomes):
+
+        -   nome
+        -   cpf
+        -   data_nascimento
+        -   telefone
+        -   email
+        -   senha
+
+-   **Resposta**  
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`mensagem`** que deverá possuir um texto informativo para orientar que os dados foram atualizados com sucesso.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
+
+-   **REQUISITOS OBRIGATÓRIOS**
+
+    -   Verificar se o parâmetro de rota **`numeroConta`** informado na requisição pertence a alguma conta
+    -   Verificar se foi passado, ao menos, uma propriedade no corpo (body) da requisição
+    -   Se o CPF for informado, verificar se já existe outro registro com o mesmo CPF
+    -   Se o E-mail for informado, verificar se já existe outro registro com o mesmo E-mail
+    -   Atualizar um ou mais campos dos dados do usuário de uma conta bancária;
+
+#### **Exemplos de requisição**
+
+```javascript
+// PUT /contas/1/usuario
+// informando apenas um campo para atualizar
+{
+    "nome": "Bar Foo"
+}
+
+// informando todos os campos para atualizar
+{
+    "nome": "Bar Foo",
+    "email": "bar@foo.com",
+    "cpf": "33322211100",
+    "data_nascimento": "03/05/2010",
+    "telefone": "11988889999",
+    "senha": "4321"
+}
+```
+
+#### **Exemplos de resposta**
+
+```javascript
+// HTTP Status 200 / 201
+// sucesso ao atualizar
+{
+    mensagem: "Conta atualizada com sucesso"
+}
+
+// HTTP Status 400, 404
+// erro ao atualizar
+{
+    mensagem: "Mensagem de erro"
+}
+```
+
+### **Excluir Conta**
+
+#### `DELETE` `/contas/:numeroConta`
+
+Essa é a rota que será utilizada para excluir uma conta bancária existente.
+
+-   **Requisição**
+
+    Parâmetro do tipo rota **`numeroConta`**.
     Não deverá possuir conteúdo no corpo (body) da requisição.
-
--   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um array dos objetos (categorias) encontrados.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
-
--   **REQUISITOS OBRIGATÓRIOS**
-    -   O endpoint deverá responder com um array de todas as categorias cadastradas.
-
-#### **Exemplo de requisição**
-
-```javascript
-// GET /categoria
-// Sem conteúdo no corpo (body) da requisição
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-[
-    {
-        id: 1,
-        descricao: "Roupas",
-    },
-    {
-        id: 2,
-        descricao: "Mercado",
-    },
-]
-```
-
-```javascript
-// HTTP Status 200 / 201 / 204
-[]
-```
-
-### **Listar transações do usuário logado**
-
-#### `GET` `/transacao`
-
-Essa é a rota que será chamada quando o usuario logado quiser listar todas as suas transações cadastradas.  
-**Lembre-se:** Deverão ser retornadas **apenas** transações associadas ao usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
--   **Requisição**  
-    Sem parâmetros de rota ou de query.  
-    Não deverá possuir conteúdo no corpo (body) da requisição.
-
--   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um array dos objetos (transações) encontrados.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
-
--   **REQUISITOS OBRIGATÓRIOS**
-    -   O usuário deverá ser identificado através do ID presente no token de validação
-    -   O endpoint deverá responder com um array de todas as transações associadas ao usuário. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
-
-#### **Exemplo de requisição**
-
-```javascript
-// GET /transacao
-// Sem conteúdo no corpo (body) da requisição
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-[
-    {
-        id: 1,
-        tipo: "saida",
-        descricao: "Sapato amarelo",
-        valor: 15800,
-        data: "2022-03-23T15:35:00.000Z",
-        usuario_id: 5,
-        categoria_id: 4,
-        categoria_nome: "Roupas",
-    },
-    {
-        id: 3,
-        tipo: "entrada",
-        descricao: "Salário",
-        valor: 300000,
-        data: "2022-03-24T15:30:00.000Z",
-        usuario_id: 5,
-        categoria_id: 6,
-        categoria_nome: "Salários",
-    },
-]
-```
-
-```javascript
-// HTTP Status 200 / 201 / 204
-[]
-```
-
-### **Detalhar uma transação do usuário logado**
-
-#### `GET` `/transacao/:id`
-
-Essa é a rota que será chamada quando o usuario logado quiser obter uma das suas transações cadastradas.  
-**Lembre-se:** Deverá ser retornado **apenas** transação associada ao usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
--   **Requisição**  
-    Deverá ser enviado o ID da transação no parâmetro de rota do endpoint.  
-    O corpo (body) da requisição não deverá possuir nenhum conteúdo.
-
--   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto que representa a transação encontrada, com todas as suas propriedades, conforme exemplo abaixo, acompanhado de **_status code_** apropriado.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
-
--   **REQUISITOS OBRIGATÓRIOS**
-    -   Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado.
-
-#### **Exemplo de requisição**
-
-```javascript
-// GET /transacao/2
-// Sem conteúdo no corpo (body) da requisição
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-{
-    "id": 3,
-    "tipo": "entrada",
-    "descricao": "Salário",
-    "valor": 300000,
-    "data": "2022-03-24T15:30:00.000Z",
-    "usuario_id": 5,
-    "categoria_id": 6,
-    "categoria_nome": "Salários",
-}
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
-{
-    "mensagem": "Transação não encontrada."
-}
-```
-
-### **Cadastrar transação para o usuário logado**
-
-#### `POST` `/transacao`
-
-Essa é a rota que será utilizada para cadastrar uma transação associada ao usuário logado.  
-**Lembre-se:** Deverá ser possível cadastrar **apenas** transações associadas ao próprio usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
--   **Requisição**  
-    Sem parâmetros de rota ou de query.  
-    O corpo (body) da requisição deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
-
-    -   descricao
-    -   valor
-    -   data
-    -   categoria_id
-    -   tipo (campo que será informado se a transação corresponde a uma saída ou entrada de valores)
 
 -   **Resposta**
-    Em caso de **sucesso**, deveremos enviar, no corpo (body) da resposta, as informações da transação cadastrada, incluindo seu respectivo `id`.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`mensagem`** que deverá possuir um texto informativo para orientar que a conta foi excluída com sucesso. 
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
 
 -   **REQUISITOS OBRIGATÓRIOS**
-    -   Validar os campos obrigatórios:
-        -   descricao
-        -   valor
-        -   data
-        -   categoria_id
-        -   tipo
-    -   Validar se existe categoria para o id enviado no corpo (body) da requisição.
-    -   Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra `entrada` ou `saida`, exatamente como descrito.
-    -   Cadastrar a transação associada ao usuário logado.
+
+    -   Verificar se o valor atribuído ao parâmetro de rota **`numeroConta`** informado na requisição pertence a alguma conta
+    -   Verificar se o saldo da conta bancária em questão é zero, pois, não será permitido excluir conta bancária que possua saldo em conta.
+    -   Remover a conta do objeto de persistência de dados.
 
 #### **Exemplo de requisição**
 
 ```javascript
-// POST /transacao
-{
-    "tipo": "entrada",
-    "descricao": "Salário",
-    "valor": 300000,
-    "data": "2022-03-24T15:30:00.000Z",
-    "categoria_id": 6
-}
+// DELETE /contas/1
+// Sem conteúdo no corpo (body) da requisição
 ```
 
 #### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
+// HTTP Status 200 / 201
+// sucesso ao excluir
 {
-    "id": 3,
-    "tipo": "entrada",
-    "descricao": "Salário",
-    "valor": 300000,
-    "data": "2022-03-24T15:30:00.000Z",
-    "usuario_id": 5,
-    "categoria_id": 6,
-    "categoria_nome": "Salários",
+    mensagem: "Conta excluída com sucesso"
+}
+
+// HTTP Status 400, 404
+// erro ao excluir
+{
+    mensagem: "Mensagem de erro"
 }
 ```
 
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
-{
-    "mensagem": "Todos os campos obrigatórios devem ser informados."
-}
-```
+### **Depositar**
 
-### **Atualizar transação do usuário logado**
+#### `POST` `/transacoes/depositar`
 
-#### `PUT` `/transacao/:id`
+Essa é a rota que será utilizada para somar o valor do depósito ao saldo de uma conta válida e registrar essa transação.
 
-Essa é a rota que será chamada quando o usuario logado quiser atualizar uma das suas transações cadastradas.  
-**Lembre-se:** Deverá ser possível atualizar **apenas** transações associadas ao próprio usuário logado, que deverá ser identificado através do ID presente no token de validação.
+-   **Requisição**
 
--   **Requisição**  
-    Deverá ser enviado o ID da transação no parâmetro de rota do endpoint.  
-    O corpo (body) da requisição deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
-
-    -   descricao
+    Sem parâmetros de rota ou de query  
+    O corpo (body) deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
+    -   numero_conta
     -   valor
-    -   data
-    -   categoria_id
-    -   tipo (campo que será informado se a transação corresponde a uma saída ou entrada de valores)
 
 -   **Resposta**  
-    Em caso de **sucesso**, não deveremos enviar conteúdo no corpo (body) da resposta.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`mensagem`** que deverá possuir um texto informativo para orientar que o depósito foi realizado com sucesso.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
 
 -   **REQUISITOS OBRIGATÓRIOS**
-    -   Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado.
+
     -   Validar os campos obrigatórios:
-        -   descricao
+        -   numero_conta
         -   valor
-        -   data
-        -   categoria_id
-        -   tipo
-    -   Validar se existe categoria para o id enviado no corpo (body) da requisição.
-    -   Validar se o tipo enviado no corpo (body) da requisição corresponde a palavra `entrada` ou `saida`, exatamente como descrito.
-    -   Atualizar a transação no banco de dados
+    -   Verificar se o valor atribuído a propriedade **`numero_conta`** informada no corpo da requisição pertence a alguma conta
+    -   Verificar se o valor atribuído a propriedade **`valor`** informada no corpo da requisição é negativo ou está zerado, pois, não serão permitidos depósitos com valores negativos ou zerados
+    -   Somar o valor de depósito ao saldo da conta encontrada
 
 #### **Exemplo de requisição**
 
 ```javascript
-// PUT /transacao/2
+// POST /transacoes/depositar
 {
-	"descricao": "Sapato amarelo",
-	"valor": 15800,
-	"data": "2022-03-23 12:35:00",
-	"categoria_id": 4,
-	"tipo": "saida"
+    "numero_conta": "1",
+    "valor": 10000
 }
 ```
 
 #### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
-// Sem conteúdo no corpo (body) da resposta
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
+// HTTP Status 200 / 201
+// sucesso ao depositar
 {
-    "mensagem": "Todos os campos obrigatórios devem ser informados."
+    mensagem: "Depósito realizado com sucesso"
+}
+
+// HTTP Status 400, 404
+// erro ao depositar
+{
+    mensagem: "Mensagem de erro"
 }
 ```
 
-### **Excluir transação do usuário logado**
-
-#### `DELETE` `/transacao/:id`
-
-Essa é a rota que será chamada quando o usuario logado quiser excluir uma das suas transações cadastradas.  
-**Lembre-se:** Deverá ser possível excluir **apenas** transações associadas ao próprio usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
--   **Requisição**  
-    Deverá ser enviado o ID da transação no parâmetro de rota do endpoint.  
-    O corpo (body) da requisição não deverá possuir nenhum conteúdo.
-
--   **Resposta**  
-    Em caso de **sucesso**, não deveremos enviar conteúdo no corpo (body) da resposta.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
-
--   **REQUISITOS OBRIGATÓRIOS**:
-    -   Validar se existe transação para o id enviado como parâmetro na rota e se esta transação pertence ao usuário logado.
-    -   Excluir a transação no banco de dados.
-
-#### **Exemplo de requisição**
+#### **Exemplo do registro de um depósito**
 
 ```javascript
-// DELETE /transacao/2
-// Sem conteúdo no corpo (body) da requisição
-```
-
-#### **Exemplos de resposta**
-
-```javascript
-// HTTP Status 200 / 201 / 204
-// Sem conteúdo no corpo (body) da resposta
-```
-
-```javascript
-// HTTP Status 400 / 401 / 403 / 404
 {
-    "mensagem": "Transação não encontrada."
+    data: "2021-08-10 23:40:35",
+    numero_conta: "1",
+    valor: 10000
 }
 ```
 
-### **Obter extrato de transações**
+### **Sacar**
 
-#### `GET` `/transacao/extrato`
+#### `POST` `/transacoes/sacar`
 
-Essa é a rota que será chamada quando o usuario logado quiser obter o extrato de todas as suas transações cadastradas.
-**Lembre-se:** Deverá ser possível consultar **apenas** transações associadas ao próprio usuário logado, que deverá ser identificado através do ID presente no token de validação.
+Essa é a rota que será utilizada para realizar o saque de um valor em uma determinada conta bancária e registrar essa transação.
 
--   **Requisição**  
+-   **Requisição**
+
     Sem parâmetros de rota ou de query.  
-    O corpo (body) da requisição não deverá possuir nenhum conteúdo.
+    O corpo (body) deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
+    -   numero_conta
+    -   valor
+    -   senha
 
 -   **Resposta**  
-    Em caso de **sucesso**, deveremos enviar no corpo (body) da resposta um objeto contendo a soma de todas as transações do tipo `entrada` e a soma de todas as transações do tipo `saida`.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
 
--   **REQUISITOS OBRIGATÓRIOS**:
-    -   Em caso de não existir transações do tipo `entrada` cadastradas para o usuário logado, o valor retornado no corpo (body) da resposta deverá ser 0.
-    -   Em caso de não existir transações do tipo `saida` cadastradas para o usuário logado, o valor retornado no corpo (body) da resposta deverá ser 0.
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`mensagem`** que deverá possuir um texto informativo para orientar que o saque foi realizado com sucesso.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
 
-**Importante: A criação desta rota, no arquivo `rotas.js`, deverá acontecer antes da criação da rota de detalhamento de uma transação (`GET /transacao/:id`), caso contrário, esta rota nunca será possível ser acessada.**
+-   **REQUISITOS OBRIGATÓRIOS**
+
+    -   Validar os campos obrigatórios:
+        -   numero_conta
+        -   valor
+        -   senha
+    -   Verificar se o valor atribuído a propriedade **`numero_conta`** informada no corpo da requisição pertence a alguma conta
+    -   Verificar se o valor atribuído a propriedade **`senha`** informada no corpo da requisição é uma senha válida para a conta informada
+    -   Verificar se o valor atribuído a propriedade **`valor`** informada no corpo da requisição é maior do que o saldo em conta, pois, não serão permitidos saques com valores superiores ao saldo em conta 
+    -   Subtrair o valor sacado do saldo da conta encontrada
 
 #### **Exemplo de requisição**
 
 ```javascript
-// DELETE /transacao/extrato
-// Sem conteúdo no corpo (body) da requisição
+// POST /transacoes/sacar
+{
+    "numero_conta": "1",
+    "valor": 10000,
+    "senha": "1234"
+}
 ```
 
 #### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
+// HTTP Status 200 / 201
+// sucesso ao sacar
 {
-	"entrada": 300000,
-	"saida": 15800
+    mensagem: "Saque realizado com sucesso"
+}
+
+// HTTP Status 400, 404
+// erro ao sacar
+{
+    mensagem: "Mensagem de erro"
 }
 ```
 
----
+#### **Exemplo do registro de um saque**
 
-## **EXTRA**
+```javascript
+{
+    data: "2021-08-10 23:40:35",
+    numero_conta: "1",
+    valor: 10000
+}
+```
 
-**ATENÇÃO!:** Esta parte extra não é obrigatória e recomendamos que seja feita apenas quando terminar toda a parte obrigatória acima.
+### **Transferir**
 
-### **Filtrar transações por categoria**
+#### `POST` `/transacoes/transferir`
 
-Na funcionalidade de listagem de transações do usuário logado (**GET /transacao**), deveremos incluir um parâmetro do tipo query **filtro** para que seja possível consultar apenas transações das categorias informadas.
+Essa é a rota que será utilizada para  para realizar a transferência de saldo de uma conta bancária para outra e registrar essa transação.
 
-**Lembre-se:** Deverão ser retornadas **apenas** transações associadas ao usuário logado, que deverá ser identificado através do ID presente no token de validação.
+-   **Requisição**
+
+    Sem parâmetros de rota ou de query.  
+    O corpo (body) deverá possuir um objeto com as seguintes propriedades (respeitando estes nomes):
+    -   numero_conta_origem
+    -   numero_conta_destino
+    -   valor
+    -   senha
+
+-   **Resposta**  
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`mensagem`** que deverá possuir um texto informativo para orientar que a t ransferência foi realizada com sucesso.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
+
+-   **REQUISITOS OBRIGATÓRIOS**
+
+    -   Validar os campos obrigatórios:
+        -   numero_conta_origem
+        -   numero_conta_destino
+        -   valor
+        -   senha
+    -   Verificar se o valor atribuído a propriedade **`numero_conta_origem`** informada no corpo da requisição pertence a alguma conta
+    -   Verificar se o valor atribuído a propriedade **`numero_conta_destino`** informada no corpo da requisição pertence a alguma conta
+    -   Verificar se o valor atribuído a propriedade **`senha`** informada no corpo da requisição é uma senha válida para a **conta de origem** informada
+    -   Verificar se o valor atribuído a propriedade **`valor`** informada no corpo da requisição é maior do que o saldo existente na **conta de origem**, pois, não serão permitidas transferências com valores superiores ao saldo em conta 
+    -   Subtrair o valor da transfência do saldo na conta de origem
+    -   Somar o valor da transferência no saldo da conta de destino
+
+#### **Exemplo de requisição**
+
+```javascript
+// POST /transacoes/transferir
+{
+    "numero_conta_origem": "1",
+    "numero_conta_destino": "1",
+    "valor": 10000,
+    "senha": "1234"
+}
+```
+
+#### **Exemplos de resposta**
+
+```javascript
+// HTTP Status 200 / 201
+// sucesso ao transferir
+{
+    mensagem: "Transferência realizado com sucesso"
+}
+
+// HTTP Status 400, 404
+// erro ao transferir
+{
+    mensagem: "Mensagem de erro"
+}
+```
+
+#### **Exemplo do registro de uma transferência**
+
+```javascript
+{
+    data: "2021-08-10 23:40:35",
+    numero_conta_origem: "1",
+    numero_conta_destino: "2",
+    valor: 10000
+}
+```
+
+### **Consultar Saldo**
+
+#### `GET` `/contas/saldo?numero_conta=123&senha=123`
+
+Essa é a rota que será utilizada para retornar o saldo de uma conta bancária.
 
 -   **Requisição**  
-    Parâmetro opcional do tipo query **filtro**.
+
+    Parâmetros do tipo query:
+        -   numero_conta.  
+        -   senha.  
     Não deverá possuir conteúdo no corpo (body) da requisição.
 
 -   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um array dos objetos (transações) encontradas.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`saldo`** que deverá possuir o saldo em conta.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
 
 -   **REQUISITOS OBRIGATÓRIOS**
-    -   O usuário deverá ser identificado através do ID presente no token de validação
-    -   O parâmetro opcional do tipo query **filtro**, quando enviado, deverá ser sempre um array contendo a descrição de uma ou mais categorias.
-    -   O endpoint deverá responder com um array de todas as transações associadas ao usuário que sejam da categorias passadas no parâmetro query. Caso não exista nenhuma transação associada ao usuário deverá responder com array vazio.
+
+    -   Verificar se os parâmetros de query **`numero_conta`** e **`senha`** foram informados na requisição
+    -   Verificar se o valor atribuído a propriedade **`numero_conta`** informada através de parâmetro de query pertence a alguma conta
+    -   Verificar se o valor atribuído a propriedade **`senha`** informada através de parâmetro de query é uma senha válida para a conta informada
+    -   Exibir o saldo da conta bancária em questão
 
 #### **Exemplo de requisição**
 
 ```javascript
-// GET /transacao?filtro[]=roupas&filtro[]=salários
+// GET /contas/saldo?numero_conta=numero-da-conta&senha=senha-da-conta
 // Sem conteúdo no corpo (body) da requisição
 ```
 
 #### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
-[
-    {
-        id: 1,
-        tipo: "saida",
-        descricao: "Sapato amarelo",
-        valor: 15800,
-        data: "2022-03-23T15:35:00.000Z",
-        usuario_id: 5,
-        categoria_id: 4,
-        categoria_nome: "Roupas",
-    },
-    {
-        id: 3,
-        tipo: "entrada",
-        descricao: "Salário",
-        valor: 300000,
-        data: "2022-03-24T15:30:00.000Z",
-        usuario_id: 5,
-        categoria_id: 6,
-        categoria_nome: "Salários",
-    },
-]
+// HTTP Status 200 / 201
+// sucesso ao obter saldo
+{
+    saldo: 10000
+}
+
+// HTTP Status 400, 404
+// erro ao obter saldo
+{
+    mensagem: "Mensagem de erro"
+}
 ```
+
+### Extrato
+
+#### `GET` `/contas/extrato?numero_conta=123&senha=123`
+
+Essa é a rota que será utilizada para  listar as transações realizadas de uma conta específica.
+
+-   **Requisição**  
+
+    Parâmetros do tipo query:
+        -   numero_conta.  
+        -   senha.  
+    Não deverá possuir conteúdo no corpo (body) da requisição.
+
+-   **Resposta**  
+
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com a propriedade **`saques`** que deverá possuir todos os saques vinculados a conta, a propriedade **`depositos`** que deverá possuir todos os depósitos vinculados a conta, a propriedade **`transferenciasEnviadas`** que deverá possuir todas as transferências enviadas desta conta e a propriedade **`transferenciasRecebidas`** que deverá possuir todas as transferências recebidas nesta conta.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **`mensagem`** que deverá possuir como valor um texto explicando o motivo da falha.
+
+-   **REQUISITOS OBRIGATÓRIOS**
+
+    -   Verificar se os parâmetros de query **`numero_conta`** e **`senha`** foram informados na requisição
+    -   Verificar se o valor atribuído a propriedade **`numero_conta`** informada através de parâmetro de query pertence a alguma conta
+    -   Verificar se o valor atribuído a propriedade **`senha`** informada através de parâmetro de query é uma senha válida para a conta informada
+    -   Retornar a lista de saques, depósitos, transferências enviadas e transferências recebidas da conta em questão.
+
+#### **Exemplo de requisição**
 
 ```javascript
-// HTTP Status 200 / 201 / 204
-[]
+// GET /contas/extrato?numero_conta=numero-da-conta&senha=senha-da-conta
+// Sem conteúdo no corpo (body) da requisição
 ```
 
----
+#### **Exemplos de resposta**
 
-Link do deploy da API somente para testes: [ link](https://desafio-backend-03-dindin.herokuapp.com/)
+```javascript
+// HTTP Status 200
+// sucesso ao obter extrato
+{
+  depositos: [
+    {
+      data: "2021-08-18 20:46:03",
+      numero_conta: "1",
+      valor: 10000
+    },
+    {
+      data: "2021-08-18 20:46:06",
+      numero_conta: "1",
+      valor: 10000
+    }
+  ],
+  saques: [
+    {
+      data: "2021-08-18 20:46:18",
+      numero_conta: "1",
+      valor: 1000
+    }
+  ],
+  transferenciasEnviadas: [
+    {
+      data: "2021-08-18 20:47:10",
+      numero_conta_origem: "1",
+      numero_conta_destino: "2",
+      valor: 5000
+    }
+  ],
+  transferenciasRecebidas: [
+    {
+      data: "2021-08-18 20:47:24",
+      numero_conta_origem: "2",
+      numero_conta_destino: "1",
+      valor: 2000
+    },
+    {
+      data: "2021-08-18 20:47:26",
+      numero_conta_origem: "2",
+      numero_conta_destino: "1",
+      valor: 2000
+    }
+  ]
+}
 
-**Este link é somente para testes (ou seja, será possível realizar requisições a esta API através deste link)**
+// HTTP Status 400, 404
+// erro ao obter extrato
+{
+    mensagem: 'Mensagem do erro!'
+}
+```
 
----
+## Aulas úteis:
 
-**LEMBRE-SE**: Feito é melhor que perfeito!!!
+-   [Rotas, Intermediários e Controladores](https://plataforma.cubos.academy/curso/b0149c95-5986-4ac2-ac4c-a0f323353f26/data/28/07/2021/aula/b648d8cb-a9db-4224-96dc-ed83e99bcc7b/27eebd29-2318-41eb-b789-201f075be137)
+-   [Aula API REST](https://plataforma.cubos.academy/curso/b0149c95-5986-4ac2-ac4c-a0f323353f26/data/26/07/2021/aula/059dc3f1-f8b5-4e5b-86ec-cea2736645b8/)
+-   [Formatando datas com date-fns](https://plataforma.cubos.academy/curso/b0149c95-5986-4ac2-ac4c-a0f323353f26/data/02/08/2021/aula/506a987e-ba14-4ee4-9326-c9e1aa62b7f7/5d2dceac-f1b3-460a-856e-b83701fa5206)
+-   [Aula de funções e objetos](https://plataforma.cubos.academy/curso/b0149c95-5986-4ac2-ac4c-a0f323353f26/data/21/06/2021/aula/5fbcc043-aa55-45a4-bced-4c59751fc2d8/)
+-   [Aula de Revisão](https://plataforma.cubos.academy/curso/b0149c95-5986-4ac2-ac4c-a0f323353f26/data/18/08/2021/aula/cbf59ce0-e7c7-405d-938e-e70afcbba534/)
 
-###### tags: `back-end` `módulo 3` `nodeJS` `PostgreSQL` `API REST` `desafio`
+**LEMBRE-SE**: é melhor feito do que perfeito!!!
+
+###### tags: `back-end` `módulo 2` `nodeJS` `API REST` `desafio`

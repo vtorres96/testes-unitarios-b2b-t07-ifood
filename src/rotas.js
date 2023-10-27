@@ -1,27 +1,18 @@
 const express = require('express');
-const { listarCategorias } = require('./controladores/categoria');
-const { login } = require('./controladores/login');
-const { listarTransacoes, detalharTransacao, cadastrarTransacao, atualizarTransacao, excluirTransacao, consultarExtrato } = require('./controladores/transacao');
-const { cadastrarUsuario, obterPerfilUsuario, atualizarPerfilUsuario } = require('./controladores/usuario');
-const { filtroAutenticacao } = require('./intermediarios/autenticacao');
+const contas = require('./controladores/contas');
+const transacoes = require('./controladores/transacoes');
 
 const rotas = express();
 
-rotas.post('/usuario', cadastrarUsuario);
-rotas.post('/login', login);
+rotas.post('/contas', contas.criarConta);
+rotas.get('/contas', contas.listarContas);
+rotas.put('/contas/:numeroConta/usuario', contas.atualizarUsuarioConta);
+rotas.delete('/contas/:numeroConta', contas.excluirConta);
+rotas.get('/contas/saldo', transacoes.saldo);
+rotas.get('/contas/extrato', transacoes.extrato);
 
-rotas.use(filtroAutenticacao)
+rotas.post('/transacoes/depositar', transacoes.depositar);
+rotas.post('/transacoes/sacar', transacoes.sacar);
+rotas.post('/transacoes/transferir', transacoes.transferir);
 
-rotas.get('/usuario', obterPerfilUsuario);
-rotas.put('/usuario', atualizarPerfilUsuario);
-
-rotas.get('/categoria', listarCategorias);
-
-rotas.get('/transacao', listarTransacoes);
-rotas.get('/transacao/extrato', consultarExtrato);
-rotas.get('/transacao/:id', detalharTransacao);
-rotas.post('/transacao', cadastrarTransacao);
-rotas.put('/transacao/:id', atualizarTransacao);
-rotas.delete('/transacao/:id', excluirTransacao);
-
-module.exports = rotas
+module.exports = rotas;
